@@ -1,0 +1,7 @@
+black
+jupyterlab
+matplotlib
+pandas
+plotly
+scikit-learn
+seaborn
