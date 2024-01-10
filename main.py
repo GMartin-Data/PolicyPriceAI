@@ -1,7 +1,18 @@
+import joblib
 import numpy as np
 import streamlit as st
 
 
+# Loading (and caching) the model
+@st.cache_resource
+def load_model(model_path):
+    model = joblib.load(model_path)
+    return model
+
+# # Uncomment when "model.pkl" is generated
+# model = load_model("model.pkl")
+
+## Gathering informations
 with st.sidebar:
     st.markdown("#### **INFORMATIONS NEEDED**")
     with st.form("questions"):
@@ -30,7 +41,7 @@ with st.sidebar:
                           ["northeast", "northwest", "souteast", "southwest"])
         submit_btn = st.form_submit_button("Submit")
 
-
+## Disclaimer, and input's double check
 smoker_display = "smoker" if smoker == "yes" else "non smoker"
 st.title("PolicyPriceAI")
 st.divider()
@@ -48,7 +59,11 @@ st.markdown(f"""
 st.divider()
 st.caption("With these informations, here are your annual charges for insurance:")
 
+
+## Performing the prediction
 bmi = weight / (height ** 2)
+# Reshaping because we need a 2D-array as pipeline input
+X_user = np.array([age, sex, bmi, children, smoker, region]).reshape(-1, 1)
 
-
-X_user = np.array([age, sex, bmi, children, smoker, region])
+# # The output should be a 1D-array with one value
+# fees = model.predict(X_user)[0]
