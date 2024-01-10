@@ -1,6 +1,7 @@
 import joblib
 import numpy as np
 import streamlit as st
+from streamlit_extras.app_logo import add_logo
 
 
 # Loading (and caching) the model
@@ -14,6 +15,7 @@ def load_model(model_path):
 
 ## Gathering informations
 with st.sidebar:
+    add_logo("https://ibb.co/bgR7vnP")
     st.markdown("#### **INFORMATIONS NEEDED**")
     with st.form("questions"):
         age = st.number_input("Please type your age",
