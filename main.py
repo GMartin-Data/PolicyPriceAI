@@ -15,7 +15,9 @@ def load_model(model_path):
 
 ## Gathering informations
 with st.sidebar:
-    add_logo("https://ibb.co/bgR7vnP")
+    st.markdown("""<img src='https://i.ibb.co/SwN5Mjy/Logo-shield-resized.png'>
+                powered by PolicyPriceAI
+                """, unsafe_allow_html=True)
     st.markdown("#### **INFORMATIONS NEEDED**")
     with st.form("questions"):
         age = st.number_input("Please type your age",
@@ -47,30 +49,30 @@ with st.sidebar:
 smoker_display = "smoker" if smoker == "yes" else "non smoker"
 st.title("PolicyPriceAI")
 st.divider()
-st.header("Let's evaluate your annual insurance charges")
+st.markdown("### Let's evaluate your annual insurance charges")
 st.markdown("#### **Please EXPAND the sidebar on the left**")
 st.divider()
-st.markdown(f"""
-            ### You specified the following informations:
-            - **{age}** years old,
-            - **{sex}**, 
-            - weight: **{weight}** kg , height: **{height:.2f}** m 
-            - **{smoker_display}**
-            - living in **{region}**
-            """)
-st.divider()
-st.markdown("#### With these informations, here are your annual charges for insurance:")
+if submit_btn:
+    st.markdown(f"""
+                ### You specified the following informations:
+                - **{age}** years old, **{sex}**, 
+                - weight: **{weight}** kg , height: **{height:.2f}** m 
+                - **{smoker_display}**
+                - living in **{region}**
+                """)
+    st.divider()
+    st.markdown("#### With these informations, here are your annual charges for insurance:")
 
 
-## Performing the prediction
-bmi = weight / (height ** 2)
-# Reshaping because we need a 2D-array as pipeline input
-X_user = np.array([age, sex, bmi, children, smoker, region]).reshape(-1, 1)
+    ## Performing the prediction
+    bmi = weight / (height ** 2)
+    # Reshaping because we need a 2D-array as pipeline input
+    X_user = np.array([age, sex, bmi, children, smoker, region]).reshape(-1, 1)
 
-# # The output should be a 1D-array with one value
-# fees = model.predict(X_user)[0]
-fees = 12345.67890
+    # # The output should be a 1D-array with one value
+    # fees = model.predict(X_user)[0]
+    fees = 12345.67890
 
-st.markdown(f"""
-#### **{fees:.2f}** $
-            """)
+    st.markdown(f"""
+    #### **{fees:.2f}** $
+                """)
