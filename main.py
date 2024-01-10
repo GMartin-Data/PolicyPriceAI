@@ -16,7 +16,7 @@ def load_model(model_path):
 ## Gathering informations
 with st.sidebar:
     st.markdown("""<img src='https://i.ibb.co/SwN5Mjy/Logo-shield-resized.png'>
-                powered by PolicyPriceAI
+                powered by <strong>PolicyPriceAI</strong>
                 """, unsafe_allow_html=True)
     st.markdown("#### **INFORMATIONS NEEDED**")
     with st.form("questions"):
