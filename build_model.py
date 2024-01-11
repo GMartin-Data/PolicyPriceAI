@@ -1,21 +1,18 @@
 import os
-from typing import Optional
 
+import joblib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import loguniform, uniform
-import seaborn as sns
+from scipy.stats import uniform
 import wget
 
 from sklearn.compose import ColumnTransformer
-from sklearn.dummy import DummyRegressor
-from sklearn.linear_model import LinearRegression, Lasso, Ridge, ElasticNet
-from sklearn.metrics import make_scorer, mean_squared_error as mse, r2_score as r2
-from sklearn.model_selection import cross_validate, learning_curve, train_test_split
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, StratifiedKFold
+from sklearn.linear_model import ElasticNet
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import  FunctionTransformer, OneHotEncoder, PolynomialFeatures, RobustScaler, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, PolynomialFeatures, StandardScaler
 
 
 # Utility Function for Data Preprocessing
@@ -62,7 +59,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                     stratify=X['smoker'])
 
 # Build Pipeline
-bmi_categorizer = FunctionTransformer(split_bmi_in_three)
 ohe_nom = OneHotEncoder(drop="first", handle_unknown="ignore")
 ohe_bin = OneHotEncoder(drop="if_binary", handle_unknown="ignore")
 poly = PolynomialFeatures(degree=2)
@@ -71,20 +67,21 @@ std = StandardScaler()
 en = ElasticNet(random_state=42, max_iter=10_000, tol=1e-3
 )
 
-pipe_bmi = make_pipeline(bmi_categorizer, ohe_nom)
-
-encoding = ColumnTransformer(
-    transformers=[("bmi", pipe_bmi, ["bmi"]),
-                  ("bin", ohe_bin, ["sex", "smoker"]),
-                  ("ohe", ohe_nom, ["region"])],
+encoder = ColumnTransformer(
+    transformers=[
+        ("bin", ohe_bin, ["sex", "smoker"]),
+        ("nom", ohe_nom, ["bmi", "region"])
+    ],
     remainder="passthrough"
 )
 
-model = make_pipeline(encoding, poly, std, en)
+model = make_pipeline(encoder, poly, std, en)
 
 # Binning bmi outside Pipeline
 X_bmi_nom = X.copy()
 X_bmi_nom.bmi = X_bmi_nom.bmi.apply(split_bmi_in_three)
+
+# Stratified (smoker) Hold-Out
 X_bmi_nom_train, X_bmi_nom_test, y_train, y_test = train_test_split(
     X_bmi_nom, y,
     shuffle=True,
@@ -113,3 +110,6 @@ random_search.fit(X_bmi_nom_train, y_train)
 best_model = random_search.best_estimator_
 best_model.fit(X_bmi_nom_train, y_train)
 best_model.score(X_bmi_nom_test, y_test)
+
+# Save the model
+joblib.dump(best_model, "model.joblib")
