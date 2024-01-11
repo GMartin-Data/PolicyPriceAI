@@ -1,7 +1,6 @@
 import joblib
 import numpy as np
 import streamlit as st
-from streamlit_extras.app_logo import add_logo
 
 
 # Loading (and caching) the model
