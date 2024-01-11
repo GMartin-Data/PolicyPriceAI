@@ -31,7 +31,6 @@
 30,22,male,35.6,0,yes,southwest,35585.576
 31,18,female,26.315,0,no,northeast,2198.18985
 32,19,female,28.6,5,no,southwest,4687.797
-33,63,male,28.31,0,no,northwest,13770.0979
 34,28,male,36.4,1,yes,southwest,51194.55914
 35,19,male,20.425,0,no,northwest,1625.43375
 36,62,female,32.965,3,no,northwest,15612.19335
@@ -67,6 +66,7 @@
 67,40,male,26.315,1,no,northwest,6389.37785
 68,40,female,36.19,0,no,southeast,5920.1041
 69,28,male,23.98,3,yes,southeast,17663.1442
+70,27,female,24.75,0,yes,southeast,16577.7795
 71,31,male,28.5,5,no,northeast,6799.458
 72,53,female,28.1,3,no,southwest,11741.726
 73,58,male,32.01,1,no,southeast,11946.6259
@@ -162,7 +162,6 @@
 167,32,female,33.155,3,no,northwest,6128.79745
 168,19,female,31.825,1,no,northwest,2719.27975
 169,27,male,18.905,3,no,northeast,4827.90495
-170,63,male,41.47,0,no,southeast,13405.3903
 171,49,male,30.3,0,no,southwest,8116.68
 172,18,male,15.96,0,no,northeast,1694.7964
 173,35,female,34.8,1,no,southwest,5246.047
@@ -495,7 +494,6 @@
 512,51,male,22.42,0,no,northeast,9361.3268
 513,19,male,30.4,0,no,southwest,1256.299
 514,39,male,28.3,1,yes,southwest,21082.16
-515,58,male,35.7,0,no,southwest,11362.755
 516,20,male,35.31,1,no,southeast,27724.28875
 517,45,male,30.495,2,no,northwest,8413.46305
 518,35,female,31.0,1,no,southwest,5240.765
@@ -676,7 +674,6 @@
 697,56,male,33.725,0,no,northwest,10976.24575
 698,23,female,39.27,2,no,southeast,3500.6123
 699,21,female,34.87,0,no,southeast,2020.5523
-700,50,female,44.745,0,no,northeast,9541.69555
 701,53,male,41.47,0,no,southeast,9504.3103
 702,34,female,26.41,1,no,northwest,5385.3379
 703,47,female,29.545,1,no,northwest,8930.93455
@@ -908,6 +905,7 @@
 941,18,female,40.185,0,no,northeast,2217.46915
 942,19,male,22.61,0,no,northwest,1628.4709
 943,62,male,39.93,0,no,southeast,12982.8747
+944,56,female,35.8,1,no,southwest,11674.13
 945,42,male,35.8,2,no,southwest,7160.094
 947,42,male,31.255,0,no,northwest,6358.77645
 948,25,male,29.7,3,yes,southwest,19933.458
@@ -948,6 +946,7 @@
 983,20,male,30.115,5,no,northeast,4915.05985
 984,44,female,25.8,1,no,southwest,7624.63
 985,43,male,30.115,3,no,northwest,8410.04685
+986,45,female,27.645,1,no,northwest,28340.18885
 988,24,female,20.52,0,yes,northeast,14571.8908
 989,26,female,19.8,1,no,southwest,3378.91
 990,38,female,27.835,2,no,northeast,7144.86265
