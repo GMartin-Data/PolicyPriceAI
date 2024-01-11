@@ -25,7 +25,7 @@ with st.sidebar:
         sex = st.radio("Please select your gender",
                        ["female", "male"],
                        horizontal=True)
-        weight = st.number_input("Please type your age (in kg)",
+        weight = st.number_input("Please type your weight (in kg)",
                                  min_value=20,
                                  max_value=220,
                                  value=60)
@@ -65,6 +65,7 @@ if submit_btn:
 
     ## Performing the prediction
     bmi = weight / (height ** 2)
+    
     # Reshaping because we need a 2D-array as pipeline input
     X_user = np.array([age, sex, bmi, children, smoker, region]).reshape(-1, 1)
 
