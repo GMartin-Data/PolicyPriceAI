@@ -9,8 +9,8 @@ def load_model(model_path):
     model = joblib.load(model_path)
     return model
 
-# # Uncomment when "model.pkl" is generated
-# model = load_model("model.pkl")
+# # Uncomment when "model.joblib" is generated
+# model = load_model("model.joblib")
 
 ## Gathering informations
 with st.sidebar:
@@ -73,7 +73,7 @@ if submit_btn:
     # log_fees = model.predict(X_user)[0]
     # Transform fees to retrieve original target
     # fees = np.exp(log_fees) - 1
-    fees = 12345.67890
+    fees = 12345.67890  # Display test: delete this when fees is implemented.
 
     st.markdown(f"""
     #### **{fees:.2f}** $
