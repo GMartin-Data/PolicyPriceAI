@@ -3,14 +3,14 @@ import numpy as np
 import streamlit as st
 
 
-# Loading (and caching) the model
+# Function to load (and cache) the model
 @st.cache_resource
 def load_model(model_path):
     model = joblib.load(model_path)
     return model
 
-# # Uncomment when "model.joblib" is generated
-# model = load_model("model.joblib")
+# Loading model
+model = load_model("model.joblib")
 
 ## Gathering informations
 with st.sidebar:
@@ -69,11 +69,10 @@ if submit_btn:
     # Reshaping because we need a 2D-array as pipeline input
     X_user = np.array([age, sex, bmi, children, smoker, region]).reshape(-1, 1)
 
-    # # The output should be a 1D-array with one value
-    # log_fees = model.predict(X_user)[0]
+    # The output should be a 1D-array with one value
+    log_fees = model.predict(X_user)[0]
     # Transform fees to retrieve original target
-    # fees = np.exp(log_fees) - 1
-    fees = 12345.67890  # Display test: delete this when fees is implemented.
+    fees = np.exp(log_fees) - 1
 
     st.markdown(f"""
     #### **{fees:.2f}** $
