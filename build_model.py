@@ -96,7 +96,7 @@ en = ElasticNet(random_state=42, max_iter=10_000, tol=1e-3)
 model = make_pipeline(encoder, poly, std, en)
 
 # Train Model
-params = {"elasticnet__alpha": uniform(0, 2), "elasticnet_l1_ratio": uniform(0, 1)}
+params = {"elasticnet__alpha": uniform(0, 2), "elasticnet__l1_ratio": uniform(0, 1)}
 
 random_search = RandomizedSearchCV(
     model, param_distributions=params, n_iter=2_000, cv=5, n_jobs=-1
