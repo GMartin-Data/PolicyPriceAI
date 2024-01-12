@@ -47,15 +47,18 @@ for dir in dirs:
         os.makedirs(dir)
 
 # Loading Data
-url = "https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/csv/4072eb5e-e963-4a17-a794-3ea028d0a9c4.csv"
-output_path = "csvs/dataset.csv"
-wget.download(url, output_path)
+data_path = "csvs/dataset.csv"
+if not os.path(data_path):
+    url = "https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/csv/4072eb5e-e963-4a17-a794-3ea028d0a9c4.csv"
+    wget.download(url, data_path)
 
 # Cleaning Data
-df = pd.read_csv(output_path).drop_duplicates()
+df = pd.read_csv(data_path).drop_duplicates()
 
 # Dump Clean Data
-df.to_csv("csvs/cleaned_dataset.csv", index=False)
+clean_path = "csvs/cleaned_dataset.csv"
+if not os.path(clean_path):
+    df.to_csv(clean_path, index=False)
 
 # Separating Target and Features
 y = df.pop("charges")
