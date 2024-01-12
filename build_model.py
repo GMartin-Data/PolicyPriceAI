@@ -48,7 +48,7 @@ for dir in dirs:
 
 # Loading Data
 data_path = "csvs/dataset.csv"
-if not os.path(data_path):
+if not os.path.exists(data_path):
     url = "https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/csv/4072eb5e-e963-4a17-a794-3ea028d0a9c4.csv"
     wget.download(url, data_path)
 
@@ -57,7 +57,7 @@ df = pd.read_csv(data_path).drop_duplicates()
 
 # Dump Clean Data
 clean_path = "csvs/cleaned_dataset.csv"
-if not os.path(clean_path):
+if not os.path.exists(clean_path):
     df.to_csv(clean_path, index=False)
 
 # Separating Target and Features
