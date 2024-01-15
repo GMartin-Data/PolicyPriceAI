@@ -37,7 +37,16 @@ Le dépôt contient notamment:
 - **5 notebooks**, préfixés séquentiellement.
     - un prévu pour le nettoyage `1_cleaning.ipynb`
     - deux pour l'EDA, `2_eda.ipynb` et `2_eda_final.ipynb` contenant, pour le premier, une exploration "tous azymuts" et, pour le second, une approche plus résumée, centrée sur la présentation client.
-    - deux pour le ML
+    - deux pour le ML, sur le même schéma.
+- **2 scripts Python**
+    -  `build_model.py` autorise un *QuickStart* sans passer par les Notebooks, en résumant les étapes essentielles finalisées de ces derniers.
+    - `main.py` contient la logique de l'application Streamlit permettant de saisir les données utilisateurs et de réaliser la prédiction.
+- Une structure de dossiers permettant de recueillir:
+    - les graphes de l'EDA,
+    - les fichiers csv utiles.
+
+## Lancement
+L'application streamlit se lance suivant la procédure habituelle avec `streamlit run main.py`
 
 
 
