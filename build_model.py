@@ -1,7 +1,6 @@
 import os
 
 import joblib
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.stats import uniform
@@ -14,14 +13,7 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder, PolynomialFeatures, StandardScaler
 
-
-# Utility Function for Data Preprocessing
-def split_bmi_in_three(x: float) -> str:
-    if x < 25:
-        return "underweight_normal"
-    if x < 30:
-        return "overweight"
-    return "obesity"
+from binner import ThresholdBinningTransformer
 
 
 # Creating Folder's Structure in Case of First Run
@@ -31,15 +23,18 @@ for dir in dirs:
         os.makedirs(dir)
 
 # Loading Data
-url = "https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/csv/4072eb5e-e963-4a17-a794-3ea028d0a9c4.csv"
-output_path = "csvs/dataset.csv"
-wget.download(url, output_path)
+data_path = "csvs/dataset.csv"
+if not os.path.exists(data_path):
+    url = "https://simplonline-v3-prod.s3.eu-west-3.amazonaws.com/media/file/csv/4072eb5e-e963-4a17-a794-3ea028d0a9c4.csv"
+    wget.download(url, data_path)
 
 # Cleaning Data
-df = pd.read_csv(output_path).drop_duplicates()
+df = pd.read_csv(data_path).drop_duplicates()
 
 # Dump Clean Data
-df.to_csv("csvs/cleaned_dataset.csv", index=False)
+clean_path = "csvs/cleaned_dataset.csv"
+if not os.path.exists(clean_path):
+    df.to_csv(clean_path, index=False)
 
 # Separating Target and Features
 y = df.pop("charges")
@@ -48,51 +43,51 @@ X = df
 # Modifying Target's Shape
 y = np.log(y + 1)
 
-# Hold-Out
+# Hold-Out, with stratified k-fold on `smoker`
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, shuffle=True, train_size=0.85, random_state=42, stratify=X["smoker"]
 )
 
-# Build Pipeline
+# Building Pipeline
+# Instanciate custom transformer for `bmi`
+bmi_edges = [0.0, 25.0, 30.0, np.inf]
+bmi_cats = ["underweight_normal", "overweight", "obesity"]
+bmi_categorizer = ThresholdBinningTransformer(column="bmi", bins=bmi_edges, labels=bmi_cats)   
+
 ohe_nom = OneHotEncoder(drop="first", handle_unknown="ignore")
 ohe_bin = OneHotEncoder(drop="if_binary", handle_unknown="ignore")
-poly = PolynomialFeatures(degree=2)
-std = StandardScaler()
 
-en = ElasticNet(random_state=42, max_iter=10_000, tol=1e-3)
+pipe_bmi = make_pipeline(bmi_categorizer, ohe_nom)
 
+# Stages of the Pipeline
 encoder = ColumnTransformer(
     transformers=[
+        ("bmi", pipe_bmi, ["bmi"]),
         ("bin", ohe_bin, ["sex", "smoker"]),
-        ("nom", ohe_nom, ["bmi", "region"]),
+        ("nom", ohe_nom, ["region"]),
     ],
     remainder="passthrough",
 )
+poly = PolynomialFeatures(degree=2)
+std = StandardScaler()
+en = ElasticNet(random_state=42, max_iter=10_000, tol=1e-3)
 
 model = make_pipeline(encoder, poly, std, en)
 
-# Binning bmi outside Pipeline
-X_bmi_nom = X.copy()
-X_bmi_nom.bmi = X_bmi_nom.bmi.apply(split_bmi_in_three)
-
-# Stratified (smoker) Hold-Out
-X_bmi_nom_train, X_bmi_nom_test, y_train, y_test = train_test_split(
-    X_bmi_nom, y, shuffle=True, train_size=0.85, random_state=42, stratify=X["smoker"]
-)
-
 # Train Model
-params = {"elasticnet__alpha": uniform(0, 2), "elasticnet_l1_ratio": uniform(0, 1)}
+params = {"elasticnet__alpha": uniform(0, 2), "elasticnet__l1_ratio": uniform(0, 1)}
 
 random_search = RandomizedSearchCV(
     model, param_distributions=params, n_iter=2_000, cv=5, n_jobs=-1
 )
 
-random_search.fit(X_bmi_nom_train, y_train)
+random_search.fit(X_train, y_train)
 
 # Score
 best_model = random_search.best_estimator_
-best_model.fit(X_bmi_nom_train, y_train)
-best_model.score(X_bmi_nom_test, y_test)
+best_model.fit(X_train, y_train)
+score = best_model.score(X_test, y_test)
+print(f"Score on test set: {score}")
 
 # Save the model
 joblib.dump(best_model, "model.joblib")
